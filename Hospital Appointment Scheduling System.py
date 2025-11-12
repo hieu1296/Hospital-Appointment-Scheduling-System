@@ -39,23 +39,27 @@ class Solution:
             for doctor in Doctors:
                 if doctor.start_time >= doctor.end_time:
                     continue
+
                 
-                IRS = doctor.start_time + doctor.slot_length
-                while (i < P and ((IRS) >= Patients[i].arrival_time) ): # and doctor.start_time <=  Patients[i].arrival_time)
-                    priority, arrival_time, Patient_id = Patients[i].priority,Patients[i].arrival_time ,Patients[i].id
+                # enqueue patients arriving within this slot window
+                while i < P and Patients[i].arrival_time <= doctor.start_time:
+                    priority, arrival_time = Patients[i].priority, Patients[i].arrival_time
                     heapq.heappush(minH, (-priority, arrival_time, i))
                     i += 1
 
 
                 if minH:
+                    print(minH, doctor.start_time)
                     priority, arrival_time, idx = heapq.heappop(minH)
                     slot_start = doctor.start_time
                     res[idx] = [doctor.id, slot_start]
-                    doctor.start_time = slot_start + doctor.slot_length
 
-                    if IRS >= doctor.end_time: 
-                        Hospital.available_doctors -= 1
-            # print(i, minH, Hospital.available_doctors )
+                doctor.start_time = doctor.start_time + doctor.slot_length
+
+                if doctor.start_time  >= doctor.end_time:
+                    Hospital.available_doctors -= 1
+                    # print(i, minH, Hospital.available_doctors )
+            print(i, minH, Hospital.available_doctors)
         return res
     
 def DataHandle(hospital):
