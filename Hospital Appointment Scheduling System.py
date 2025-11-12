@@ -31,7 +31,7 @@ class Solution:
         Doctors, Patients = Hospital.doctors, Hospital.patients
 
         minH = [] # Priority, Arrival_Time
-        res = [[-1, -1]] * P # Actually we dont need Res, yinwei we could use the patients data once, Hence why dont we just simply replace it with the result ?
+        res = [[-1, -1] for _ in range(P)] # Actually we dont need Res, yinwei we could use the patients data once, Hence why dont we just simply replace it with the result ?
         i = 0
 
 
@@ -43,18 +43,19 @@ class Solution:
                 IRS = doctor.start_time + doctor.slot_length
                 while (i < P and ((IRS) >= Patients[i].arrival_time) ): # and doctor.start_time <=  Patients[i].arrival_time)
                     priority, arrival_time, Patient_id = Patients[i].priority,Patients[i].arrival_time ,Patients[i].id
-                    heapq.heappush(minH, (-priority, arrival_time, Patient_id))
+                    heapq.heappush(minH, (-priority, arrival_time, i))
                     i += 1
 
 
                 if minH:
-                    priority, arrival_time, Patient_id = heapq.heappop(minH)
-                    res[abs(Patient_id) - 201] = [abs(priority), IRS]
-                    doctor.start_time = IRS
+                    priority, arrival_time, idx = heapq.heappop(minH)
+                    slot_start = doctor.start_time
+                    res[idx] = [doctor.id, slot_start]
+                    doctor.start_time = slot_start + doctor.slot_length
 
                     if IRS >= doctor.end_time: 
                         Hospital.available_doctors -= 1
-                    
+            # print(i, minH, Hospital.available_doctors )
         return res
     
 def DataHandle(hospital):
@@ -84,4 +85,3 @@ if __name__ == "__main__":
     hospital = Hospital()
     DataHandle(hospital)
     print(sll.Schedule(hospital))
-
