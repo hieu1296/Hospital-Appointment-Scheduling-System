@@ -41,7 +41,7 @@ class Solution:
                     continue
                 
                 IRS = doctor.start_time + doctor.slot_length
-                while (i < P and ((IRS) >= Patients[i].arrival_time and doctor.start_time <=  Patients[i].arrival_time)):
+                while (i < P and ((IRS) >= Patients[i].arrival_time) ): # and doctor.start_time <=  Patients[i].arrival_time)
                     priority, arrival_time, Patient_id = Patients[i].priority,Patients[i].arrival_time ,Patients[i].id
                     heapq.heappush(minH, (-priority, arrival_time, Patient_id))
                     i += 1
@@ -84,3 +84,4 @@ if __name__ == "__main__":
     hospital = Hospital()
     DataHandle(hospital)
     print(sll.Schedule(hospital))
+
